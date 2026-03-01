@@ -1,0 +1,15 @@
+{
+    "framework": "vite",
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
+    "rewrites": [
+        {
+            "source": "/analyze",
+            "destination": "https://ai-contribution-detector-api.vercel.app/api/analyze"
+        },
+        {
+            "source": "/scan-repo",
+            "destination": "https://ai-contribution-detector-api.vercel.app/api/scan-repo"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "version": 2,
+    "rewrites": [
+        {
+            "source": "/api/analyze",
+            "destination": "/api/analyze"
+        },
+        {
+            "source": "/api/scan-repo",
+            "destination": "/api/scan-repo"
+        }
+    ],
+    "headers": [
+        {
+            "source": "/api/(.*)",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Credentials",
+                    "value": "true"
+                },
+                {
+                    "key": "Access-Control-Allow-Methods",
+                    "value": "GET,POST,OPTIONS"
+                },
+                {
+                    "key": "Access-Control-Allow-Headers",
+                    "value": "Content-Type"
+                }
+            ]
+        }
+    ]
+}

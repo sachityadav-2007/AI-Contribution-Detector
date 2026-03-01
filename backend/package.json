@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "ai-detector-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "AI Contribution Detector API",
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
@@ -10,7 +10,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1"
