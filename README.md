@@ -192,7 +192,7 @@ Hackathon time limit requires a simple but working prototype.
 * Connected Express score generator to Frontend
 
 ### Checkpoint 6: Deployment
-* (To be added)
+* Deploy in vercal
 
 ---
 
@@ -251,3 +251,11 @@ Hackathon time limit requires a simple but working prototype.
 * Improves transparency in software teams
 * Helps detect risky AI-generated code
 * Supports academic and enterprise integrity policies
+
+
+## PPT and Demo vedio link
+
+https://drive.google.com/drive/folders/1PHgvUsUHEz2hlwhud7DslSp8wyutgvUx
+
+## DEPLOY Link
+https://ai-contribution-detector-final.vercel.app/
