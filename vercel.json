@@ -5,11 +5,11 @@
     "rewrites": [
         {
             "source": "/analyze",
-            "destination": "https://ai-contribution-detector-api.vercel.app/api/analyze"
+            "destination": "https://ai-contribution-detector-1.onrender.com/analyze"
         },
         {
             "source": "/scan-repo",
-            "destination": "https://ai-contribution-detector-api.vercel.app/api/scan-repo"
+            "destination": "https://ai-contribution-detector-1.onrender.com/scan-repo"
         }
     ]
 }

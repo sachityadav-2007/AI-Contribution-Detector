@@ -6,6 +6,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../co
 import { motion, AnimatePresence } from "framer-motion";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 const SCAN_STEPS = [
     "Connecting to GitHub...",
     "Fetching commits...",
@@ -43,7 +45,7 @@ export function RepositoryAnalyzer() {
         try {
             console.log("Calling /scan-repo with", repoUrl, branch);
             // Call /scan-repo with the GitHub repo URL and branch as query params
-            const res = await fetch(`/scan-repo?repoUrl=${encodeURIComponent(repoUrl)}&branch=${encodeURIComponent(branch)}`);
+            const res = await fetch(`${API_URL}/scan-repo?repoUrl=${encodeURIComponent(repoUrl)}&branch=${encodeURIComponent(branch)}`);
             const data = await res.json();
 
             if (!res.ok) {
@@ -110,7 +112,7 @@ export function RepositoryAnalyzer() {
         setTextAnalysisResult(null);
 
         try {
-            const response = await fetch("/analyze", {
+            const response = await fetch(`${API_URL}/analyze`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text: textInput })
