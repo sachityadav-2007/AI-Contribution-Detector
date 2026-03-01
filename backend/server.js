@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5175" }));
+app.use(cors({ origin: "https://ai-contribution-detector.vercel.app/" }));
 app.use(express.json());
 
 app.post("/analyze", (req, res) => {
