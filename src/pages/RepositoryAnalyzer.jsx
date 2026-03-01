@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, GitBranch, ShieldCheck } from "lucide-react";
+import { Search, GitBranch, ShieldCheck, FileText, Bot, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/Button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/Card";
@@ -18,6 +18,11 @@ export function RepositoryAnalyzer() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [progress, setProgress] = useState(0);
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+    // State for direct text analysis
+    const [textInput, setTextInput] = useState("");
+    const [textAnalysisResult, setTextAnalysisResult] = useState(null);
+    const [isTextAnalyzing, setIsTextAnalyzing] = useState(false);
 
     const handleAnalyze = (e) => {
         e.preventDefault();
@@ -68,6 +73,34 @@ export function RepositoryAnalyzer() {
             };
         }
     }, [isAnalyzing, navigate]);
+    const handleTextAnalyze = async (e) => {
+        e.preventDefault();
+
+        if (!textInput.trim()) return;
+
+        setIsTextAnalyzing(true);
+        setTextAnalysisResult(null);
+
+        try {
+            const response = await fetch("/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: textInput })
+            });
+
+            const data = await response.json();
+            console.log("API response:", data);
+            setTextAnalysisResult(data);
+        } catch (err) {
+            console.error(err);
+            setTextAnalysisResult({
+                aiScore: 0,
+                reason: "Could not connect to backend",
+            });
+        } finally {
+            setIsTextAnalyzing(false);
+        }
+    };
 
     return (
         <div className="space-y-8 relative">
@@ -170,6 +203,66 @@ export function RepositoryAnalyzer() {
                             Start Analysis Scan
                         </Button>
                     </form>
+                </CardContent>
+            </Card>
+
+            {/* Text / Code Snippet Analyzer */}
+            <Card className="border-purple-500/20 shadow-purple-900/10 hover:shadow-purple-500/10 transition-shadow">
+                <CardHeader>
+                    <CardTitle className="text-xl">Direct Code / Text Analysis</CardTitle>
+                    <CardDescription>Paste a commit message or code snippet to check for AI generation.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleTextAnalyze} className="flex flex-col gap-4">
+                        <div className="w-full space-y-2">
+                            <label htmlFor="textInput" className="text-sm font-medium text-slate-300">Input Text or Code</label>
+                            <div className="relative group">
+                                <FileText className="absolute left-3 top-3 h-4 w-4 text-slate-400 group-focus-within:text-purple-400 transition-colors" />
+                                <textarea
+                                    id="textInput"
+                                    required
+                                    rows={5}
+                                    placeholder="Paste your commit message or code block here..."
+                                    value={textInput}
+                                    onChange={(e) => setTextInput(e.target.value)}
+                                    className="w-full bg-slate-900/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all placeholder:text-slate-500 shadow-inner resize-y"
+                                />
+                            </div>
+                        </div>
+                        {/* Analyze Button */}
+                        <Button
+                            type="submit"
+                            disabled={isTextAnalyzing}
+                            className="w-full sm:w-auto self-start bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-purple-500/25"
+                        >
+                            {isTextAnalyzing ? "Analyzing..." : "Analyze"}
+                        </Button>
+                    </form>
+
+                    {/* Result Card below the button */}
+                    {textAnalysisResult && (
+                        <div className="mt-6 p-6 rounded-xl bg-slate-800/50 border border-slate-700/50 flex flex-col md:flex-row gap-6 items-center">
+                            <div className="flex flex-col items-center justify-center min-w-[120px]">
+                                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">AI Score</h3>
+                                <div className={`text-4xl font-bold ${textAnalysisResult.aiScore > 70 ? 'text-red-400' : textAnalysisResult.aiScore > 30 ? 'text-yellow-400' : 'text-emerald-400'}`}>
+                                    {textAnalysisResult.aiScore}%
+                                </div>
+                            </div>
+                            <div className="flex-1 space-y-2">
+                                <div className="flex items-center gap-2">
+                                    {textAnalysisResult.aiScore > 70 ? (
+                                        <AlertTriangle className="h-5 w-5 text-red-400" />
+                                    ) : textAnalysisResult.aiScore > 30 ? (
+                                        <Bot className="h-5 w-5 text-yellow-400" />
+                                    ) : (
+                                        <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                                    )}
+                                    <h4 className="text-lg font-medium text-slate-200">Analysis Result</h4>
+                                </div>
+                                <p className="text-slate-400">{textAnalysisResult.reason}</p>
+                            </div>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 
