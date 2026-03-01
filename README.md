@@ -1,68 +1,70 @@
 # AI Contribution Detection Tool
-
-A tool that analyzes GitHub commits and code to detect AI-generated contributions and improve transparency in software development.
+*A tool that analyzes GitHub commits and code to detect AI-generated contributions and improve transparency in software development.*
 
 ---
 
 ## 1. Problem Statement
-
-### Problem Title
-
-Detecting AI-Generated Contributions in GitHub Repositories
-
-### Problem Description
-
-Developers increasingly use AI tools like ChatGPT and Copilot to generate commit messages, code snippets, documentation, and pull requests. However, Git platforms currently have no system to detect or track AI-generated contributions, leading to issues in transparency, accountability, and code quality.
-
-### Target Users
-
-* Software development teams
-* Open-source maintainers
-* Academic institutions
-* Companies enforcing AI usage policies
-
-### Existing Gaps
-
-* No automated detection of AI-generated commits
-* No analytics on AI usage in repositories
-* No transparency on AI-assisted contributions
-* Difficulty enforcing policies on AI usage
+Developers increasingly use AI tools like ChatGPT and Copilot to generate commit messages, code snippets, documentation, and pull requests. However, Git platforms currently have no system to detect or track AI-generated contributions, leading to issues in transparency, accountability, and code quality. Catching AI-generated code is critical for maintaining academic integrity, enforcing enterprise compliance, and ensuring open-source maintainers understand the code they are reviewing.
 
 ---
 
-## 2. Problem Understanding & Approach
-
-### Root Cause Analysis
-
-AI tools generate high-quality text and code that is difficult to distinguish from human work. Developers may submit AI-generated code without full understanding, creating risks in security and maintainability.
-
-### Solution Strategy
-
-Create a tool that analyzes commit messages and code patterns using rule-based heuristics or ML models to assign an **AI Likelihood Score** and provide analytics.
+## 2. Solution Overview
+Our web tool provides an automated way to estimate whether a commit or a piece of code was AI-generated. 
+- **Repository Scan**: Paste any public GitHub repository URL and target branch. The tool fetches recent commits via the GitHub API and scores each commit message.
+- **Direct Text Analysis**: Paste a raw commit message or code snippet directly into the tool for an instant AI-likelihood score.
 
 ---
 
-## 3. Proposed Solution
-
-### Solution Overview
-
-A web tool that checks commit messages and code snippets to estimate whether they were AI-generated.
-
-### Core Idea
-
-Use pattern detection (language style, repetition, formatting) to identify AI-like behavior.
-
-### Key Features
-
-* Detect AI-style commit messages
-* Detect AI-generated code patterns
-* Assign AI Likelihood Score
-* Contributor-level analytics
-* Repository-level AI usage trends
+## 3. Features
+* **Direct Text Analysis**: Instantly score pasted code or commit messages.
+* **Repository Commit Scan**: Fetch and analyze the latest commits directly from any public GitHub repository.
+* **AI Score + Explanation**: Get a 0-100% likelihood score along with clear, bulleted reasons (e.g., "AI-style wording detected", "Short commit message").
+* **Risk Badge + Chart**: Visualize repository health with a beautiful distribution bar chart (`recharts`) and color-coded risk badges (🔴 High, 🟡 Medium, 🟢 Low).
+* **Branch Support**: Target specific branches (e.g., `main`, `develop`) during repository scans.
 
 ---
 
-## 4. System Architecture
+## 4. Tech Stack
+* **Frontend**: React, Tailwind CSS, Recharts, Lucide Icons
+* **Backend**: Node.js, Express.js
+* **Integrations**: GitHub Public API
+* **Build Tool**: Vite
+
+---
+
+## 5. Demo Instructions
+
+### Frontend (React + Vite)
+```bash
+# From project root
+npm install
+npm run dev
+# → Runs at http://localhost:5173
+```
+
+### Backend (Express API)
+```bash
+cd backend
+npm install
+node server.js
+# → Runs at http://127.0.0.1:5001
+```
+
+> **Note**: Both servers must be running. The Vite development server automatically proxies `/analyze` and `/scan-repo` requests to the Express backend to avoid CORS issues.
+
+---
+
+## 6. Roles & Responsibilities
+
+| Member Name | Role | Responsibilities |
+| :--- | :--- | :--- |
+| Sachit Kumar | Frontend | UI/UX Design, React Components, Recharts Integration |
+| Azmol Wasim Hussain | Frontend, Backend | API Proxy Setup, Frontend Wiring, API Testing |
+| Yash Borkar | Backend, Database | Express Server, GitHub API Integration, AI Scoring Logic |
+
+---
+
+## 7. System Architecture
 
 ### High-Level Flow
 
@@ -70,7 +72,7 @@ Developer/User
 ↓
 Frontend (React Web App)
 ↓
-Backend API (Node.js / Python)
+Backend API (Node.js)
 ↓
 AI Detection Engine
 ↓
@@ -79,8 +81,6 @@ Database
 Analytics Dashboard
 ↓
 Response to User
-
----
 
 ### Architecture Description
 
@@ -105,19 +105,7 @@ This architecture helps teams detect AI-generated contributions and maintain tra
 
 ---
 
-### Architecture Diagram
-
-(To be added)
-
----
-
-## 5. Database Design
-
-### ER Diagram
-
-(To be added)
-
-### ER Diagram Description
+## 8. Database Design
 
 Database will store:
 
@@ -129,26 +117,21 @@ Database will store:
 
 ---
 
-## 6. Dataset Selected
+## 9. Dataset Selected
 
 ### Dataset Name
-
 Sample GitHub Commit Dataset (Public repositories)
 
 ### Source
-
 GitHub public repositories / manually collected commits
 
 ### Data Type
-
 Text data (commit messages) + code snippets
 
 ### Selection Reason
-
 Needed real commit messages and code samples to identify AI-like patterns.
 
 ### Preprocessing Steps
-
 * Remove duplicates
 * Clean formatting
 * Tokenize text
@@ -156,24 +139,20 @@ Needed real commit messages and code samples to identify AI-like patterns.
 
 ---
 
-## 7. Model Selected
+## 10. Model Selected
 
 ### Model Name
-
 Rule-based Heuristic Detection (Initial Version)
 
 ### Selection Reasoning
-
 Hackathon time limit requires a simple but working prototype.
 
 ### Alternatives Considered
-
 * GPT-based classifier
 * BERT text classifier
 * Code similarity models
 
 ### Evaluation Metrics
-
 * Accuracy
 * Precision
 * Recall
@@ -181,87 +160,55 @@ Hackathon time limit requires a simple but working prototype.
 
 ---
 
-## 8. Technology Stack
-
-### Frontend
-
-HTML, CSS, JavaScript / React
-
-### Backend
-
-Python Flask
-
-### ML/AI
-
-Rule-based detection (future: ML model)
-
-### Database
-
-MongoDB / SQLite
-
-### Deployment
-
-Vercel
-
----
-
-## 9. API Documentation & Testing
+## 11. API Documentation & Testing
 
 ### API Endpoints List
-
-* `/analyzeCommit` – Analyze commit message
-* `/analyzeCode` – Analyze code snippet
-* `/getAnalytics` – Show AI usage stats
-
-### API Testing Screenshots
-
-(To be added)
+* `/analyze` – Analyze direct text
+* `/scan-repo` – Analyze repository commits (with `repoUrl` and `branch` params)
 
 ---
 
-## 10. Module-wise Development & Deliverables
+## 12. Module-wise Development & Deliverables
 
 ### Checkpoint 1: Research & Planning
-
 * Finalize idea
 * Create README
 * Define architecture
 
 ### Checkpoint 2: Backend Development
-
-* (To be added)
+* Express server setup
+* Rule-based scoring engine
+* GitHub API integration
 
 ### Checkpoint 3: Frontend Development
-
-* (To be added)
+* React setup with Vite and Tailwind
+* RepositoryAnalyzer forms and tables
+* Recharts integration for AI Score distribution
 
 ### Checkpoint 4: Model Training
-
-* (To be added)
+* (To be added / Future Scope)
 
 ### Checkpoint 5: Model Integration
-
-* (To be added)
+* Connected Express score generator to Frontend
 
 ### Checkpoint 6: Deployment
-
 * (To be added)
 
 ---
 
-## 11. End-to-End Workflow
+## 13. End-to-End Workflow
 
-1. User submits commit message/code
-2. Frontend sends request
-3. Backend analyzes text/code
-4. Detection logic calculates score
-5. Database stores result
-6. Analytics generated
-7. User receives report
+1. User submits Repository URL or direct text
+2. Frontend sends request to backend proxy
+3. Backend fetches commits (if repo URL provided) or analyzes direct text
+4. Detection logic calculates AI score between 0-100%
+5. Results are returned to the frontend
+6. Commit arrays are sorted by risk and rendered mapping specific risks
+7. Distribution chart tallies results to show overall proportion
 
 ---
 
-## 12. Demo & Video
+## 14. Demo & Video
 
 * Live Demo Link: To be added
 * Demo Video Link: To be added
@@ -269,49 +216,37 @@ Vercel
 
 ---
 
-## 13. Hackathon Deliverables Summary
+## 15. Hackathon Deliverables Summary
 
 * AI Contribution Detection Tool prototype
 * Rule-based detection system
-* Analytics dashboard
+* Distribution dashboard
 * GitHub repository with documentation
 
 ---
 
-## 14. Team Roles & Responsibilities
-
-| Member Name | Role                    | Responsibilities                         |
-| ----------- | ----------------------- | ---------------------------------------- |
-| Sachit Kumar| Frontend                | ---------------------------------------- |
-|Azmol Wasim Hussain | Frontend, Backend| ---------------------------------------- |
-| Yash Borkar | Backend, Database       | ---------------------------------------- |
-
----
-
-## 15. Future Scope & Scalability
+## 16. Future Scope & Scalability
 
 ### Short-Term
-
 * Improve detection accuracy
-* GitHub API integration
+* Full private-repo GitHub API integration
 
 ### Long-Term
-
-* ML-based detection model
+* ML-based detection model replacing Rule-Based heuristics
 * Browser extension
 * Enterprise compliance dashboard
 
 ---
 
-## 16. Known Limitations
+## 17. Known Limitations
 
 * Rule-based detection not 100% accurate
 * Limited dataset
-* Cannot fully prove AI usage
+* Cannot fully prove AI usage without complex heuristics
 
 ---
 
-## 17. Impact
+## 18. Impact
 
 * Improves transparency in software teams
 * Helps detect risky AI-generated code
