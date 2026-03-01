@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
+const port = process.env.PORT || 4000 
+
 app.use(cors({
     origin: [
         "http://localhost:5173",
@@ -144,6 +146,6 @@ app.get("/scan-repo", async (req, res) => {
     }
 });
 
-app.listen(5001, "127.0.0.1", () => {
+app.listen(port, () => {
     console.log("Server running on port 5001");
 });
